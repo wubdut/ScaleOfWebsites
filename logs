@@ -1,0 +1,7 @@
+对http://gs.dlut.edu.cn/进行爬取: (未对html解析进行优化)
+DFS:
+Time: 3735 s
+Number of pages: 7231
+BFS:
+Time: 1181 s
+Number of pages: 7238
