@@ -1,6 +1,7 @@
 # coding: UTF-8
 import requests
 import time
+import Queue
 from bs4 import BeautifulSoup
 from urlparse import urljoin
 from urlparse import urlparse
@@ -11,8 +12,8 @@ reload(sys)
 sys.setdefaultencoding( "utf-8" )
 
 setVisited = set()
-zhuji = 'bingle.win'
-
+crawlQueue = Queue.Queue()
+zhuji = 'gs.dlut.edu.cn'
 time1=time.time()
 
 def detect(base, url):
@@ -36,21 +37,27 @@ def parseLink(node):
         myset.add(item.get('href'))
     return list(myset)
 
-def find(pre='', node=''):
-    global zhuji, setVisited
-    node = detect(pre, node)
-    if node.find(zhuji) == -1:
-        return
-    listURL = parseLink(node)
-    if node in setVisited or listURL == ['no']:
-        return
-    else:
-        # print 'I am here: ' + node
-        setVisited.add(node)
-    for item in listURL:
-        find(node, str(item))
+def find(netSite=''):
+    global zhuji, setVisited, crawlQueue
+    crawlQueue.put(netSite)
+    while not crawlQueue.empty():
+        listURL = []
+        node = crawlQueue.get()
+        if node.find(zhuji) == -1:
+            continue
+        if node in setVisited:
+            continue
+        else:
+            listURL = parseLink(node)
+            if listURL == 'no':
+                continue
+            setVisited.add(node)
+        # print ("I am here: " + node)
+        for item in listURL:
+            crawlQueue.put(detect(node, item))
     return
-find('http://www.bingle.win:12306','')
+
+find('http://gs.dlut.edu.cn')
 time2=time.time()
 print ("Time: " + str(time2-time1) + ' s')
 print ("Number of pages: " + str(len(setVisited)))
