@@ -13,7 +13,7 @@ sys.setdefaultencoding( "utf-8" )
 
 setVisited = set()
 crawlQueue = Queue.Queue()
-zhuji = 'gs.dlut.edu.cn'
+zhuji = 'bingle.win'
 time1=time.time()
 
 def detect(base, url):
@@ -57,7 +57,7 @@ def find(netSite=''):
             crawlQueue.put(detect(node, item))
     return
 
-find('http://gs.dlut.edu.cn')
+find('http://www.bingle.win:12306')
 time2=time.time()
 print ("Time: " + str(time2-time1) + ' s')
 print ("Number of pages: " + str(len(setVisited)))
